@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Acerca – ClínicaSalud{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Acerca de ClínicaSalud</h2>
+  <p class="lead">Somos una clínica comprometida con la salud y bienestar de nuestros pacientes desde 2005.</p>
+  <p>Contamos con equipos de última tecnología y especialistas con amplia experiencia en sus áreas.</p>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-primary">← Volver al Inicio</a>
+</div>
+{% endblock %}

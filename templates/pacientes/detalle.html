@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}{{ paciente.nombre }} {{ paciente.apellido }} – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width:700px">
+  <div class="card p-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h2>👤 {{ paciente.nombre }} {{ paciente.apellido }}</h2>
+        <span class="badge bg-primary fs-6">{{ paciente.especialidad }}</span>
+      </div>
+      <div>
+        <a href="{{ url_for('paciente_editar', id_paciente=paciente.id_paciente) }}"
+           class="btn btn-warning me-1">✏️ Editar</a>
+        <form method="POST"
+              action="{{ url_for('paciente_eliminar', id_paciente=paciente.id_paciente) }}"
+              class="d-inline"
+              onsubmit="return confirm('¿Eliminar este paciente?')">
+          <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div class="row g-2">
+      <div class="col-md-6"><strong>ID:</strong> #{{ paciente.id_paciente }}</div>
+      <div class="col-md-6"><strong>Edad:</strong> {{ paciente.edad }} años</div>
+      <div class="col-md-6"><strong>Género:</strong> {{ paciente.genero }}</div>
+      <div class="col-md-6"><strong>Teléfono:</strong> {{ paciente.telefono }}</div>
+      <div class="col-md-6"><strong>Email:</strong> {{ paciente.email }}</div>
+      <div class="col-md-6"><strong>Especialidad:</strong> {{ paciente.especialidad }}</div>
+      {% if paciente.observaciones %}
+      <div class="col-12 mt-2">
+        <strong>Observaciones:</strong>
+        <p class="text-muted mt-1">{{ paciente.observaciones }}</p>
+      </div>
+      {% endif %}
+    </div>
+    <hr>
+    <a href="{{ url_for('pacientes_lista') }}" class="btn btn-outline-secondary">← Volver a la lista</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Estadísticas MySQL – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">📊 Estadísticas MySQL <span class="badge bg-info text-dark">Base de datos relacional</span></h2>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary text-center h-100">
+        <div class="card-body">
+          <div style="font-size:2.5rem">👤</div>
+          <h2 class="card-title">{{ stats.total_usuarios }}</h2>
+          <p class="card-text">Usuarios registrados</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success text-center h-100">
+        <div class="card-body">
+          <div style="font-size:2.5rem">🏥</div>
+          <h2 class="card-title">{{ stats.total_pacientes }}</h2>
+          <p class="card-text">Pacientes (MySQL)</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning text-center h-100">
+        <div class="card-body">
+          <div style="font-size:2.5rem">💊</div>
+          <h2 class="card-title">{{ stats.total_medicamentos }}</h2>
+          <p class="card-text">Medicamentos</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info text-center h-100">
+        <div class="card-body">
+          <div style="font-size:2.5rem">📅</div>
+          <h2 class="card-title">{{ stats.promedio_edad }}</h2>
+          <p class="card-text">Promedio de edad</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if stats.por_especialidad %}
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Pacientes por Especialidad</div>
+    <div class="card-body p-0">
+      <table class="table table-sm mb-0">
+        <thead class="table-light">
+          <tr><th>Especialidad</th><th>Total</th><th>Distribución</th></tr>
+        </thead>
+        <tbody>
+          {% for row in stats.por_especialidad %}
+          <tr>
+            <td>{{ row.especialidad }}</td>
+            <td><strong>{{ row.total }}</strong></td>
+            <td>
+              <div class="progress" style="height:20px">
+                <div class="progress-bar bg-success"
+                     style="width:{{ (row.total / stats.total_pacientes * 100) | int }}%">
+                  {{ (row.total / stats.total_pacientes * 100) | int }}%
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{{ url_for('mysql_estado') }}" class="btn btn-outline-secondary">← Panel MySQL</a>
+</div>
+{% endblock %}

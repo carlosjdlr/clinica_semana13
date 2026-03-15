@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Médicos – ClínicaSalud{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">👨‍⚕️ Nuestros Médicos</h2>
+  <div class="row g-4">
+    {% for doc in doctores %}
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <div style="font-size:3rem">{{ doc.icono }}</div>
+          <h5 class="card-title mt-2">{{ doc.nombre }}</h5>
+          <span class="badge bg-primary mb-2">{{ doc.especialidad }}</span>
+          <p class="text-muted small">{{ doc.educacion }}</p>
+          <p class="mb-0"><strong>Experiencia:</strong> {{ doc.experiencia }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

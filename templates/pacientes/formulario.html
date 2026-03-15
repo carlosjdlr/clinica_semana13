@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}{{ accion }} Paciente – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width:640px">
+  <h2 class="mb-4">{{ accion }} Paciente <span class="badge bg-secondary">SQLite</span></h2>
+
+  <form method="POST">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Nombre *</label>
+        <input type="text" name="nombre" class="form-control" required maxlength="80"
+               value="{{ paciente.nombre if paciente else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Apellido *</label>
+        <input type="text" name="apellido" class="form-control" required maxlength="80"
+               value="{{ paciente.apellido if paciente else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label fw-bold">Edad *</label>
+        <input type="number" name="edad" class="form-control" required min="0" max="120"
+               value="{{ paciente.edad if paciente else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label fw-bold">Género *</label>
+        <select name="genero" class="form-select" required>
+          {% for g in generos %}
+          <option value="{{ g }}" {% if paciente and paciente.genero == g %}selected{% endif %}>{{ g }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label fw-bold">Especialidad *</label>
+        <select name="especialidad" class="form-select" required>
+          {% for e in especialidades %}
+          <option value="{{ e }}" {% if paciente and paciente.especialidad == e %}selected{% endif %}>{{ e }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Teléfono *</label>
+        <input type="text" name="telefono" class="form-control" required
+               value="{{ paciente.telefono if paciente else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Email *</label>
+        <input type="email" name="email" class="form-control" required
+               value="{{ paciente.email if paciente else '' }}">
+      </div>
+      <div class="col-12">
+        <label class="form-label fw-bold">Observaciones</label>
+        <textarea name="observaciones" class="form-control" rows="3">{{ paciente.observaciones if paciente else '' }}</textarea>
+      </div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-primary">💾 {{ accion }}</button>
+      <a href="{{ url_for('pacientes_lista') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

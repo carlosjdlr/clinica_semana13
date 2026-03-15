@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Pacientes – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>🏥 Gestión de Pacientes <span class="badge bg-secondary">SQLite</span></h2>
+    <a href="{{ url_for('paciente_nuevo') }}" class="btn btn-primary">➕ Nuevo Paciente</a>
+  </div>
+
+  <!-- Buscador y filtro -->
+  <form method="GET" class="row g-2 mb-3">
+    <div class="col-md-5">
+      <input type="text" name="q" class="form-control"
+             placeholder="Buscar por nombre o apellido…" value="{{ termino }}">
+    </div>
+    <div class="col-md-3">
+      <select name="especialidad" class="form-select">
+        <option value="">— Todas las especialidades —</option>
+        {% for esp in especialidades %}
+        <option value="{{ esp }}" {% if filtro_esp == esp %}selected{% endif %}>{{ esp }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
+    </div>
+    <div class="col-md-2">
+      <a href="{{ url_for('pacientes_lista') }}" class="btn btn-outline-secondary w-100">Limpiar</a>
+    </div>
+  </form>
+
+  <!-- Estadísticas rápidas -->
+  <div class="row g-2 mb-3">
+    <div class="col-md-3">
+      <div class="card text-center p-2 bg-primary text-white">
+        <strong>{{ stats.total }}</strong><br><small>Total pacientes</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center p-2 bg-info text-white">
+        <strong>{{ stats.promedio_edad }}</strong><br><small>Promedio edad</small>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-center p-2">
+        <small class="text-muted">Especialidades activas: <strong>{{ stats.especialidades | join(', ') }}</strong></small>
+      </div>
+    </div>
+  </div>
+
+  {% if pacientes %}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th><th>Nombre</th><th>Apellido</th><th>Edad</th>
+          <th>Género</th><th>Especialidad</th><th>Email</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in pacientes %}
+        <tr>
+          <td>{{ p.id_paciente }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.apellido }}</td>
+          <td>{{ p.edad }}</td>
+          <td>{{ p.genero }}</td>
+          <td><span class="badge bg-primary">{{ p.especialidad }}</span></td>
+          <td>{{ p.email }}</td>
+          <td class="text-center">
+            <a href="{{ url_for('paciente_detalle', id_paciente=p.id_paciente) }}"
+               class="btn btn-sm btn-outline-info me-1">👁️</a>
+            <a href="{{ url_for('paciente_editar', id_paciente=p.id_paciente) }}"
+               class="btn btn-sm btn-outline-warning me-1">✏️</a>
+            <form method="POST"
+                  action="{{ url_for('paciente_eliminar', id_paciente=p.id_paciente) }}"
+                  class="d-inline"
+                  onsubmit="return confirm('¿Eliminar a {{ p.nombre }} {{ p.apellido }}?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-muted small">{{ pacientes | length }} paciente(s) encontrado(s).</p>
+  {% else %}
+  <div class="alert alert-info">No se encontraron pacientes. <a href="{{ url_for('paciente_nuevo') }}">¿Agregar uno?</a></div>
+  {% endif %}
+
+  <a href="{{ url_for('pacientes_estadisticas') }}" class="btn btn-outline-secondary mt-2">📊 Ver estadísticas</a>
+</div>
+{% endblock %}

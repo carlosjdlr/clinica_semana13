@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Servicios – ClínicaSalud{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">🩺 Nuestros Servicios</h2>
+  <div class="row g-4">
+    {% for srv in servicios %}
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div style="font-size:2.5rem">{{ srv.icono }}</div>
+          <h5 class="card-title mt-2">{{ srv.titulo }}</h5>
+          <p class="text-muted">{{ srv.descripcion }}</p>
+          <ul class="list-unstyled small">
+            {% for item in srv.incluye %}
+            <li>✅ {{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

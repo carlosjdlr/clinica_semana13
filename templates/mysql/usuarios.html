@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Usuarios MySQL – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>👤 Usuarios del Sistema <span class="badge bg-primary fs-6">MySQL</span></h2>
+    <a href="{{ url_for('mysql_usuario_nuevo') }}" class="btn btn-primary">
+      ➕ Nuevo Usuario
+    </a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  {% if usuarios %}
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Registrado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ u.id_usuario }}</td>
+          <td>{{ u.nombre }}</td>
+          <td>{{ u.mail }}</td>
+          <td>
+            <span class="badge
+              {% if u.rol == 'admin' %}bg-danger
+              {% elif u.rol == 'medico' %}bg-success
+              {% elif u.rol == 'recepcionista' %}bg-info text-dark
+              {% else %}bg-secondary{% endif %}">
+              {{ u.rol }}
+            </span>
+          </td>
+          <td>{{ u.creado_en.strftime('%d/%m/%Y') if u.creado_en else '—' }}</td>
+          <td class="text-center">
+            <a href="{{ url_for('mysql_usuario_editar', id_usuario=u.id_usuario) }}"
+               class="btn btn-sm btn-outline-warning me-1">✏️ Editar</a>
+            <form method="POST"
+                  action="{{ url_for('mysql_usuario_eliminar', id_usuario=u.id_usuario) }}"
+                  class="d-inline"
+                  onsubmit="return confirm('¿Eliminar usuario {{ u.nombre }}?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-muted">Total: <strong>{{ usuarios | length }}</strong> usuarios registrados.</p>
+  {% else %}
+  <div class="alert alert-info">No hay usuarios registrados aún.</div>
+  {% endif %}
+
+  <a href="{{ url_for('mysql_estado') }}" class="btn btn-outline-secondary mt-2">← Panel MySQL</a>
+</div>
+{% endblock %}

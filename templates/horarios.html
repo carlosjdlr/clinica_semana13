@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Horarios – ClínicaSalud{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">🕐 Horarios de Atención</h2>
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div class="card p-4">
+        <h5>🏥 Clínica General</h5>
+        <ul class="list-unstyled mt-3">
+          <li>📅 Lunes–Viernes: <strong>{{ horarios.clinica.lunes_viernes }}</strong></li>
+          <li>📅 Sábados: <strong>{{ horarios.clinica.sabados }}</strong></li>
+          <li>📅 Domingos: <strong>{{ horarios.clinica.domingos }}</strong></li>
+          <li>🚑 Urgencias: <strong>{{ horarios.clinica.urgencias }}</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="card p-4">
+        <h5>Especialidades</h5>
+        <ul class="list-group list-group-flush mt-2">
+          {% for esp in horarios.especialidades %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ esp.nombre }}</span>
+            <span class="text-muted small">{{ esp.horario }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

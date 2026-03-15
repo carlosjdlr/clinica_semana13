@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Inventario – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>💊 Inventario de Medicamentos <span class="badge bg-secondary">SQLAlchemy</span></h2>
+    <a href="{{ url_for('inventario_nuevo') }}" class="btn btn-warning">➕ Nuevo Medicamento</a>
+  </div>
+
+  <!-- Formulario guardar en archivos -->
+  <div class="card mb-4 p-3">
+    <h5>💾 Guardar en TXT / JSON / CSV</h5>
+    <form method="POST" action="{{ url_for('datos_guardar') }}">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+          <input type="text" name="nombre" class="form-control" placeholder="Nombre *" required>
+        </div>
+        <div class="col-md-2">
+          <input type="number" name="precio" class="form-control" placeholder="Precio *" step="0.01" required>
+        </div>
+        <div class="col-md-2">
+          <input type="number" name="cantidad" class="form-control" placeholder="Cantidad *" required>
+        </div>
+        <div class="col-md-2">
+          <select name="categoria" class="form-select" required>
+            {% for c in categorias %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="descripcion" class="form-control" placeholder="Descripción">
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-success w-100">💾</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla SQLAlchemy -->
+  <h5>🗄️ Base de datos SQLAlchemy (SQLite)</h5>
+  {% if datos_sql %}
+  <div class="table-responsive mb-4">
+    <table class="table table-hover table-sm align-middle">
+      <thead class="table-warning">
+        <tr><th>#</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for m in datos_sql %}
+        <tr>
+          <td>{{ m.id }}</td>
+          <td>{{ m.nombre }}</td>
+          <td><span class="badge bg-secondary">{{ m.categoria }}</span></td>
+          <td>${{ "%.2f"|format(m.precio) }}</td>
+          <td><span class="badge {{ 'bg-danger' if m.cantidad < 20 else 'bg-success' }}">{{ m.cantidad }}</span></td>
+          <td>
+            <a href="{{ url_for('inventario_editar', id_med=m.id) }}" class="btn btn-sm btn-outline-warning me-1">✏️</a>
+            <form method="POST" action="{{ url_for('inventario_eliminar', id_med=m.id) }}"
+                  class="d-inline" onsubmit="return confirm('¿Eliminar?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-muted">No hay medicamentos en la BD.</p>
+  {% endif %}
+
+  <!-- Archivos TXT/JSON/CSV -->
+  <div class="row g-3 mt-2">
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>📄 Archivo TXT ({{ datos_txt | length }} registros)</h6>
+        {% if datos_txt %}
+        <ul class="list-unstyled small" style="max-height:200px;overflow-y:auto">
+          {% for linea in datos_txt %}<li class="border-bottom pb-1 mb-1">{{ linea }}</li>{% endfor %}
+        </ul>
+        {% else %}<p class="text-muted small">Vacío</p>{% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>📋 Archivo JSON ({{ datos_json | length }} registros)</h6>
+        {% if datos_json %}
+        <ul class="list-unstyled small" style="max-height:200px;overflow-y:auto">
+          {% for item in datos_json %}
+          <li class="border-bottom pb-1 mb-1"><strong>{{ item.nombre }}</strong> – ${{ item.precio }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}<p class="text-muted small">Vacío</p>{% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>📊 Archivo CSV ({{ datos_csv | length }} registros)</h6>
+        {% if datos_csv %}
+        <ul class="list-unstyled small" style="max-height:200px;overflow-y:auto">
+          {% for row in datos_csv %}
+          <li class="border-bottom pb-1 mb-1"><strong>{{ row.nombre }}</strong> – {{ row.categoria }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}<p class="text-muted small">Vacío</p>{% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ datos.titulo }} – ClínicaSalud{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <div class="card p-4">
+    <div class="text-center mb-3" style="font-size:3rem">{{ datos.icono }}</div>
+    <h2 class="text-center">{{ datos.titulo }}</h2>
+    <p class="lead text-center text-muted">{{ datos.descripcion }}</p>
+    <hr>
+    <p class="text-center"><strong>🕐 Horario:</strong> {{ datos.horario }}</p>
+    <div class="text-center mt-3">
+      <a href="{{ url_for('index') }}" class="btn btn-outline-primary">← Volver</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

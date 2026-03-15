@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Contacto – ClínicaSalud{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">📞 Contacto</h2>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card p-4">
+        <ul class="list-unstyled">
+          <li class="mb-2">📍 <strong>Dirección:</strong> {{ contacto.direccion }}</li>
+          <li class="mb-2">📞 <strong>Teléfono:</strong> {{ contacto.telefono }}</li>
+          <li class="mb-2">💬 <strong>WhatsApp:</strong> {{ contacto.whatsapp }}</li>
+          <li class="mb-2">✉️ <strong>Email:</strong> {{ contacto.email }}</li>
+          <li class="mb-2">🕐 <strong>Horario:</strong> {{ contacto.horario_atencion }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

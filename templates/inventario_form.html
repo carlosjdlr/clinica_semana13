@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ accion }} Medicamento – ClínicaSalud{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width:560px">
+  <h2 class="mb-4">{{ accion }} Medicamento <span class="badge bg-warning text-dark">SQLAlchemy</span></h2>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label fw-bold">Nombre *</label>
+      <input type="text" name="nombre" class="form-control" required
+             value="{{ medicamento.nombre if medicamento else '' }}">
+    </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Precio ($) *</label>
+        <input type="number" name="precio" class="form-control" required step="0.01" min="0"
+               value="{{ medicamento.precio if medicamento else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Cantidad *</label>
+        <input type="number" name="cantidad" class="form-control" required min="0"
+               value="{{ medicamento.cantidad if medicamento else '' }}">
+      </div>
+    </div>
+    <div class="mb-3 mt-3">
+      <label class="form-label fw-bold">Categoría *</label>
+      <select name="categoria" class="form-select" required>
+        {% for c in categorias %}
+        <option value="{{ c }}" {% if medicamento and medicamento.categoria == c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="form-label fw-bold">Descripción</label>
+      <textarea name="descripcion" class="form-control" rows="3">{{ medicamento.descripcion if medicamento else '' }}</textarea>
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-warning">💾 {{ accion }}</button>
+      <a href="{{ url_for('datos') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
